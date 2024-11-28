@@ -29,11 +29,16 @@ const Index = () => {
     setStream(newStream);
   }, []);
 
+  const handlePoseAnalysis = useCallback((newFeedback: string) => {
+    if (!isPaused && selectedSport === 'boxing') {
+      setFeedback(newFeedback);
+    }
+  }, [isPaused, selectedSport]);
+
   const startSession = () => {
     setIsActive(true);
     setIsPaused(false);
     setFeedback(`${selectedSport} session started - Analyzing your form...`);
-    simulateFeedback();
   };
 
   const pauseSession = () => {
@@ -45,56 +50,6 @@ const Index = () => {
     setIsActive(false);
     setIsPaused(false);
     setFeedback('Session ended - Great work!');
-  };
-
-  const simulateFeedback = () => {
-    const feedbackMessages = {
-      boxing: [
-        'Keep your guard up',
-        'Good form on that jab',
-        'Rotate your hips more on the cross',
-        'Excellent footwork',
-        'Remember to breathe',
-      ],
-      yoga: [
-        'Straighten your back',
-        'Hold this pose',
-        'Breathe deeply',
-        'Great alignment',
-        'Relax your shoulders',
-      ],
-      weightlifting: [
-        'Keep your core tight',
-        'Watch your form',
-        'Maintain proper breathing',
-        'Good tempo',
-        'Stay controlled',
-      ],
-      running: [
-        'Land midfoot',
-        'Keep your posture upright',
-        'Relax your shoulders',
-        'Good arm movement',
-        'Maintain steady pace',
-      ],
-      basketball: [
-        'Bend your knees more',
-        'Follow through on your shot',
-        'Keep your eyes up',
-        'Good dribbling form',
-        'Nice defensive stance',
-      ],
-    };
-
-    let index = 0;
-    const interval = setInterval(() => {
-      if (!isActive || isPaused) {
-        clearInterval(interval);
-        return;
-      }
-      setFeedback(feedbackMessages[selectedSport as keyof typeof feedbackMessages][index % 5]);
-      index++;
-    }, 3000);
   };
 
   return (
@@ -138,7 +93,11 @@ const Index = () => {
         </div>
       ) : (
         <div className="relative h-screen">
-          <CameraView onStream={handleStream} />
+          <CameraView 
+            onStream={handleStream} 
+            onPoseAnalysis={handlePoseAnalysis}
+            isActive={isActive && !isPaused}
+          />
           {feedback && <FeedbackOverlay feedback={feedback} />}
           <SessionControls
             isActive={isActive}

@@ -1,11 +1,18 @@
 import React, { useRef, useEffect } from 'react';
 import { Camera } from 'lucide-react';
+import { initializePoseDetector, analyzePose } from '../utils/poseDetection';
 
 interface CameraViewProps {
   onStream: (stream: MediaStream) => void;
+  onPoseAnalysis?: (feedback: string) => void;
+  isActive?: boolean;
 }
 
-const CameraView: React.FC<CameraViewProps> = ({ onStream }) => {
+const CameraView: React.FC<CameraViewProps> = ({ 
+  onStream, 
+  onPoseAnalysis,
+  isActive = false
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -31,6 +38,37 @@ const CameraView: React.FC<CameraViewProps> = ({ onStream }) => {
       stream?.getTracks().forEach(track => track.stop());
     };
   }, [onStream]);
+
+  useEffect(() => {
+    let animationFrame: number;
+    let detector: any;
+
+    const analyzePoseLoop = async () => {
+      if (!videoRef.current || !detector || !isActive) return;
+
+      const feedback = await analyzePose(videoRef.current);
+      if (feedback && onPoseAnalysis) {
+        onPoseAnalysis(feedback);
+      }
+
+      animationFrame = requestAnimationFrame(analyzePoseLoop);
+    };
+
+    const setupDetector = async () => {
+      if (isActive) {
+        detector = await initializePoseDetector();
+        analyzePoseLoop();
+      }
+    };
+
+    setupDetector();
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [isActive, onPoseAnalysis]);
 
   return (
     <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden">
