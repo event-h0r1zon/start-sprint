@@ -54,26 +54,32 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black p-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8 text-center animate-fade-in">
-          <h1 className="text-4xl font-bold text-white mb-2">Boxing Training Assistant</h1>
-          <p className="text-gray-400">Get real-time feedback on your technique</p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
+      {!isActive ? (
+        <div className="h-screen flex flex-col items-center justify-center p-6 animate-fade-in">
+          <h1 className="text-3xl font-bold text-white mb-2">Boxing Buddy</h1>
+          <p className="text-gray-400 text-center mb-8">Get real-time feedback on your boxing technique</p>
+          <button
+            onClick={startSession}
+            className="bg-accent text-white px-8 py-4 rounded-full text-lg font-medium
+                     shadow-lg hover:opacity-90 transition-all duration-200 active:scale-95"
+          >
+            Start Training
+          </button>
         </div>
-
-        <div className="relative animate-fade-in">
+      ) : (
+        <div className="relative h-screen">
           <CameraView onStream={handleStream} />
           {feedback && <FeedbackOverlay feedback={feedback} />}
+          <SessionControls
+            isActive={isActive}
+            isPaused={isPaused}
+            onStart={startSession}
+            onPause={pauseSession}
+            onStop={stopSession}
+          />
         </div>
-
-        <SessionControls
-          isActive={isActive}
-          isPaused={isPaused}
-          onStart={startSession}
-          onPause={pauseSession}
-          onStop={stopSession}
-        />
-      </div>
+      )}
     </div>
   );
 };
