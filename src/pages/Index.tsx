@@ -29,15 +29,39 @@ const Index = () => {
 
   const recommendedVideos = {
     boxing: [
-      { title: 'Perfect Boxing Guard Position', url: 'https://example.com/video1', thumbnail: '🥊', duration: '5:30' },
-      { title: 'Basic Boxing Combinations', url: 'https://example.com/video2', thumbnail: '👊', duration: '8:45' },
-      { title: 'Footwork Fundamentals', url: 'https://example.com/video3', thumbnail: '👣', duration: '7:15' },
+      { 
+        title: 'Perfect Jab Technique', 
+        url: 'https://example.com/video1', 
+        thumbnail: '🥊', 
+        duration: '5:30',
+        description: 'Learn the proper form for throwing a jab while maintaining chin protection'
+      },
+      { 
+        title: 'Common Jab Mistakes to Avoid', 
+        url: 'https://example.com/video2', 
+        thumbnail: '⚠️', 
+        duration: '4:15',
+        description: 'Fix these common mistakes in your jab technique and guard position'
+      },
+      { 
+        title: 'Chin Protection Drills', 
+        url: 'https://example.com/video3', 
+        thumbnail: '🛡️', 
+        duration: '7:15',
+        description: 'Essential drills to maintain proper guard while throwing jabs'
+      },
+      { 
+        title: 'Shadow Boxing: Jab Focus', 
+        url: 'https://example.com/video4', 
+        thumbnail: '👊', 
+        duration: '6:45',
+        description: 'Practice your jab technique with these shadow boxing exercises'
+      }
     ],
     yoga: [
       { title: 'Basic Yoga Poses', url: 'https://example.com/yoga1', thumbnail: '🧘‍♀️', duration: '10:00' },
       { title: 'Morning Yoga Flow', url: 'https://example.com/yoga2', thumbnail: '🌅', duration: '15:00' },
     ],
-    // ... Add videos for other sports
   };
 
   const handleStream = useCallback((newStream: MediaStream) => {
@@ -121,6 +145,7 @@ const Index = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
+                  <p className="text-gray-400 mb-2">{video.description}</p>
                   <p className="text-gray-400">Duration: {video.duration}</p>
                   <a 
                     href={video.url}
