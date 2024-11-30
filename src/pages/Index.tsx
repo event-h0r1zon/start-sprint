@@ -132,21 +132,21 @@ const Index = () => {
           <h1 className="text-3xl font-bold text-white mb-2">Training Buddy</h1>
           <p className="text-gray-400 text-center mb-8">Select your sport and get real-time feedback</p>
           
-          <div className="w-full max-w-md mb-12">
+          <div className="w-full max-w-2xl mb-12">
             <Carousel className="w-full">
               <CarouselContent>
                 {sports.map((sport) => (
-                  <CarouselItem key={sport.id} className="md:basis-1/2 lg:basis-1/3">
+                  <CarouselItem key={sport.id} className="md:basis-1/3 lg:basis-1/4">
                     <div 
                       className={`
-                        p-6 aspect-square rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer
-                        transition-all duration-200 hover:scale-105
+                        p-4 aspect-square rounded-2xl flex flex-col items-center justify-center gap-3 cursor-pointer
+                        transition-all duration-200 hover:scale-105 shadow-lg
                         ${selectedSport === sport.id ? 'bg-accent/20 border-2 border-accent' : 'bg-gray-800/50'}
                       `}
                       onClick={() => setSelectedSport(sport.id)}
                     >
-                      <span className="text-4xl">{sport.icon}</span>
-                      <h3 className="text-white font-medium">{sport.name}</h3>
+                      <span className="text-3xl">{sport.icon}</span>
+                      <h3 className="text-white font-medium text-sm">{sport.name}</h3>
                     </div>
                   </CarouselItem>
                 ))}
@@ -292,4 +292,3 @@ const Index = () => {
 };
 
 export default Index;
-
