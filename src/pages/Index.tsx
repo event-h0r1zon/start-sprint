@@ -9,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Index = () => {
   const [isActive, setIsActive] = useState(false);
@@ -16,6 +17,7 @@ const Index = () => {
   const [feedback, setFeedback] = useState('');
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [selectedSport, setSelectedSport] = useState('boxing');
+  const [showRecommendations, setShowRecommendations] = useState(false);
 
   const sports = [
     { id: 'boxing', name: 'Boxing', icon: '🥊' },
@@ -24,6 +26,19 @@ const Index = () => {
     { id: 'running', name: 'Running Form', icon: '🏃' },
     { id: 'basketball', name: 'Basketball', icon: '🏀' },
   ];
+
+  const recommendedVideos = {
+    boxing: [
+      { title: 'Perfect Boxing Guard Position', url: 'https://example.com/video1', thumbnail: '🥊', duration: '5:30' },
+      { title: 'Basic Boxing Combinations', url: 'https://example.com/video2', thumbnail: '👊', duration: '8:45' },
+      { title: 'Footwork Fundamentals', url: 'https://example.com/video3', thumbnail: '👣', duration: '7:15' },
+    ],
+    yoga: [
+      { title: 'Basic Yoga Poses', url: 'https://example.com/yoga1', thumbnail: '🧘‍♀️', duration: '10:00' },
+      { title: 'Morning Yoga Flow', url: 'https://example.com/yoga2', thumbnail: '🌅', duration: '15:00' },
+    ],
+    // ... Add videos for other sports
+  };
 
   const handleStream = useCallback((newStream: MediaStream) => {
     setStream(newStream);
@@ -38,6 +53,7 @@ const Index = () => {
   const startSession = () => {
     setIsActive(true);
     setIsPaused(false);
+    setShowRecommendations(false);
     setFeedback(`${selectedSport} session started - Analyzing your form...`);
   };
 
@@ -49,12 +65,13 @@ const Index = () => {
   const stopSession = () => {
     setIsActive(false);
     setIsPaused(false);
+    setShowRecommendations(true);
     setFeedback('Session ended - Great work!');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
-      {!isActive ? (
+      {!isActive && !showRecommendations ? (
         <div className="h-screen flex flex-col items-center justify-center p-6 animate-fade-in">
           <h1 className="text-3xl font-bold text-white mb-2">Training Buddy</h1>
           <p className="text-gray-400 text-center mb-8">Select your sport and get real-time feedback</p>
@@ -89,6 +106,42 @@ const Index = () => {
                      shadow-lg hover:opacity-90 transition-all duration-200 active:scale-95"
           >
             Start Training
+          </button>
+        </div>
+      ) : showRecommendations ? (
+        <div className="container mx-auto px-4 py-12 animate-fade-in">
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">Recommended Technique Videos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recommendedVideos[selectedSport as keyof typeof recommendedVideos]?.map((video, index) => (
+              <Card key={index} className="bg-gray-800/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <span className="text-2xl">{video.thumbnail}</span>
+                    <span className="text-white">{video.title}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-400">Duration: {video.duration}</p>
+                  <a 
+                    href={video.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-block bg-accent text-white px-4 py-2 rounded-md hover:opacity-90 transition-all"
+                  >
+                    Watch Now
+                  </a>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <button
+            onClick={() => {
+              setShowRecommendations(false);
+              setFeedback('');
+            }}
+            className="mt-8 mx-auto block bg-gray-700 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition-all"
+          >
+            Back to Sports Selection
           </button>
         </div>
       ) : (
