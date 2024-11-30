@@ -211,13 +211,13 @@ const Index = () => {
               ))}
             </div>
 
-            <div className="flex justify-center gap-4 mt-8">
+            <div className="flex flex-col gap-4 mt-8 w-full max-w-md mx-auto">
               <button
                 onClick={() => {
                   setShowPerformanceProfile(false);
                   setShowRecommendations(true);
                 }}
-                className="bg-accent text-white px-6 py-3 rounded-full hover:opacity-90 transition-all"
+                className="w-full bg-accent text-white px-6 py-3 rounded-full hover:opacity-90 transition-all"
               >
                 View Recommended Videos
               </button>
@@ -226,7 +226,7 @@ const Index = () => {
                   setShowPerformanceProfile(false);
                   setShowRecommendations(false);
                 }}
-                className="bg-gray-700 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition-all"
+                className="w-full bg-gray-700 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition-all"
               >
                 Back to Sports Selection
               </button>
@@ -292,3 +292,4 @@ const Index = () => {
 };
 
 export default Index;
+
