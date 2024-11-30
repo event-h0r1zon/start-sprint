@@ -5,6 +5,7 @@ import SessionControls from '../components/SessionControls';
 import SportsSelection from '../components/SportsSelection';
 import PerformanceProfile from '../components/PerformanceProfile';
 import RecommendedVideos from '../components/RecommendedVideos';
+import StatsCounter from '../components/StatsCounter';
 
 const Index = () => {
   const [isActive, setIsActive] = useState(false);
@@ -14,6 +15,7 @@ const Index = () => {
   const [selectedSport, setSelectedSport] = useState('boxing');
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [showPerformanceProfile, setShowPerformanceProfile] = useState(false);
+  const [stats, setStats] = useState({ excellent: 0, average: 0, bad: 0 });
 
   const handleStream = useCallback((newStream: MediaStream) => {
     setStream(newStream);
@@ -22,6 +24,15 @@ const Index = () => {
   const handlePoseAnalysis = useCallback((newFeedback: string) => {
     if (!isPaused && selectedSport === 'boxing') {
       setFeedback(newFeedback);
+      
+      // Update stats based on feedback
+      if (newFeedback.includes('Good form!')) {
+        setStats(prev => ({ ...prev, excellent: prev.excellent + 1 }));
+      } else if (newFeedback.includes('Keep your guard up!')) {
+        setStats(prev => ({ ...prev, bad: prev.bad + 1 }));
+      } else {
+        setStats(prev => ({ ...prev, average: prev.average + 1 }));
+      }
     }
   }, [isPaused, selectedSport]);
 
@@ -30,7 +41,8 @@ const Index = () => {
     setIsPaused(false);
     setShowRecommendations(false);
     setShowPerformanceProfile(false);
-    setFeedback(''); // Remove feedback message when starting
+    setFeedback('');
+    setStats({ excellent: 0, average: 0, bad: 0 }); // Reset stats when starting new session
   };
 
   const pauseSession = () => {
@@ -88,6 +100,11 @@ const Index = () => {
         onStream={handleStream} 
         onPoseAnalysis={handlePoseAnalysis}
         isActive={isActive && !isPaused}
+      />
+      <StatsCounter 
+        excellent={stats.excellent}
+        average={stats.average}
+        bad={stats.bad}
       />
       {feedback && <FeedbackOverlay feedback={feedback} />}
       <SessionControls
