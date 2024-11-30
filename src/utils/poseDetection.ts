@@ -5,6 +5,12 @@ let detector: poseDetection.PoseDetector | null = null;
 
 export const initializePoseDetector = async () => {
   if (!detector) {
+    // Initialize TensorFlow.js backend
+    await tf.ready();
+    
+    // Set backend to 'webgl' which is more widely supported than 'webgpu'
+    await tf.setBackend('webgl');
+    
     const model = poseDetection.SupportedModels.MoveNet;
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
