@@ -32,19 +32,6 @@ const Index = () => {
   const handlePoseAnalysis = useCallback((newFeedback: string) => {
     if (!isPaused && selectedSport === 'boxing') {
       setFeedback(newFeedback);
-      
-      if (newFeedback.includes('Good form!')) {
-        setStats(prev => ({ ...prev, excellent: prev.excellent + 1 }));
-        // Improve Jab Speed skill when performing well
-        setSkillLevels(prev => ({
-          ...prev,
-          'Jab Speed': Math.min(100, prev['Jab Speed'] + 2)
-        }));
-      } else if (newFeedback.includes('Keep your guard up!')) {
-        setStats(prev => ({ ...prev, bad: prev.bad + 1 }));
-      } else {
-        setStats(prev => ({ ...prev, average: prev.average + 1 }));
-      }
     }
   }, [isPaused, selectedSport]);
 
@@ -68,6 +55,11 @@ const Index = () => {
     setIsPaused(false);
     setShowPerformanceProfile(true);
     setFeedback('Session ended - Great work!');
+    // Increase Jab Speed by 4% after training
+    setSkillLevels(prev => ({
+      ...prev,
+      'Jab Speed': Math.min(100, prev['Jab Speed'] + 4)
+    }));
   };
 
   if (!isActive && !showRecommendations && !showPerformanceProfile && !showInitialProfile) {
@@ -92,6 +84,7 @@ const Index = () => {
         }}
         skillLevels={skillLevels}
         onStartTraining={startSession}
+        showRecommendationsButton={false}
       />
     );
   }
@@ -108,6 +101,8 @@ const Index = () => {
         }}
         skillLevels={skillLevels}
         onStartTraining={startSession}
+        showRecommendationsButton={true}
+        isPostTraining={true}
       />
     );
   }

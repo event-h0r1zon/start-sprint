@@ -1,12 +1,15 @@
 import React from 'react';
 import { RadialBarChart, RadialBar, Legend, Tooltip } from 'recharts';
 import { ChartContainer } from "@/components/ui/chart";
+import { toast } from "sonner";
 
 interface PerformanceProfileProps {
   onViewRecommendations: () => void;
   onBackToSports: () => void;
   skillLevels: Record<string, number>;
   onStartTraining: () => void;
+  showRecommendationsButton?: boolean;
+  isPostTraining?: boolean;
 }
 
 const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
@@ -14,6 +17,8 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
   onBackToSports,
   skillLevels,
   onStartTraining,
+  showRecommendationsButton = false,
+  isPostTraining = false,
 }) => {
   const performanceData = Object.entries(skillLevels).map(([name, value], index) => ({
     name,
@@ -26,6 +31,15 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
       '#a4de6c'
     ][index % 5]
   }));
+
+  React.useEffect(() => {
+    if (isPostTraining) {
+      toast("Jab Speed improved by 4%!", {
+        description: "Keep up the good work!",
+        duration: 4000,
+      });
+    }
+  }, [isPostTraining]);
 
   return (
     <div className="container mx-auto px-4 py-12 animate-fade-in">
@@ -80,12 +94,14 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
           >
             Start Training
           </button>
-          <button
-            onClick={onViewRecommendations}
-            className="w-full bg-gray-700 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition-all"
-          >
-            View Recommended Videos
-          </button>
+          {showRecommendationsButton && (
+            <button
+              onClick={onViewRecommendations}
+              className="w-full bg-gray-700 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition-all"
+            >
+              View Recommended Videos
+            </button>
+          )}
           <button
             onClick={onBackToSports}
             className="w-full bg-gray-700 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition-all"
