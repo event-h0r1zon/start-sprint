@@ -5,39 +5,27 @@ import { ChartContainer } from "@/components/ui/chart";
 interface PerformanceProfileProps {
   onViewRecommendations: () => void;
   onBackToSports: () => void;
+  skillLevels: Record<string, number>;
+  onStartTraining: () => void;
 }
 
 const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
   onViewRecommendations,
   onBackToSports,
+  skillLevels,
+  onStartTraining,
 }) => {
-  const performanceData = [
-    {
-      name: 'Guard Position',
-      value: 75,
-      fill: '#8884d8'
-    },
-    {
-      name: 'Jab Speed',
-      value: 65,
-      fill: '#83a6ed'
-    },
-    {
-      name: 'Chin Protection',
-      value: 60,
-      fill: '#8dd1e1'
-    },
-    {
-      name: 'Stance',
-      value: 80,
-      fill: '#82ca9d'
-    },
-    {
-      name: 'Form',
-      value: 70,
-      fill: '#a4de6c'
-    }
-  ];
+  const performanceData = Object.entries(skillLevels).map(([name, value], index) => ({
+    name,
+    value,
+    fill: [
+      '#8884d8',
+      '#83a6ed',
+      '#8dd1e1',
+      '#82ca9d',
+      '#a4de6c'
+    ][index % 5]
+  }));
 
   return (
     <div className="container mx-auto px-4 py-12 animate-fade-in">
@@ -87,8 +75,14 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
 
         <div className="flex flex-col gap-4 mt-8 w-full max-w-md mx-auto">
           <button
-            onClick={onViewRecommendations}
+            onClick={onStartTraining}
             className="w-full bg-accent text-white px-6 py-3 rounded-full hover:opacity-90 transition-all"
+          >
+            Start Training
+          </button>
+          <button
+            onClick={onViewRecommendations}
+            className="w-full bg-gray-700 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition-all"
           >
             View Recommended Videos
           </button>

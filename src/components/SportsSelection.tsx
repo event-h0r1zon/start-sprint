@@ -60,7 +60,7 @@ const SportsSelection: React.FC<SportsSelectionProps> = ({
         className="bg-accent text-white px-8 py-4 rounded-full text-lg font-medium
                  shadow-lg hover:opacity-90 transition-all duration-200 active:scale-95"
       >
-        Start Training
+        Select
       </button>
     </div>
   );

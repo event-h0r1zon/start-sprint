@@ -15,7 +15,15 @@ const Index = () => {
   const [selectedSport, setSelectedSport] = useState('boxing');
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [showPerformanceProfile, setShowPerformanceProfile] = useState(false);
+  const [showInitialProfile, setShowInitialProfile] = useState(false);
   const [stats, setStats] = useState({ excellent: 0, average: 0, bad: 0 });
+  const [skillLevels, setSkillLevels] = useState({
+    'Guard Position': 75,
+    'Jab Speed': 65,
+    'Chin Protection': 60,
+    'Stance': 80,
+    'Form': 70
+  });
 
   const handleStream = useCallback((newStream: MediaStream) => {
     setStream(newStream);
@@ -25,9 +33,13 @@ const Index = () => {
     if (!isPaused && selectedSport === 'boxing') {
       setFeedback(newFeedback);
       
-      // Update stats based on feedback
       if (newFeedback.includes('Good form!')) {
         setStats(prev => ({ ...prev, excellent: prev.excellent + 1 }));
+        // Improve Jab Speed skill when performing well
+        setSkillLevels(prev => ({
+          ...prev,
+          'Jab Speed': Math.min(100, prev['Jab Speed'] + 2)
+        }));
       } else if (newFeedback.includes('Keep your guard up!')) {
         setStats(prev => ({ ...prev, bad: prev.bad + 1 }));
       } else {
@@ -41,8 +53,9 @@ const Index = () => {
     setIsPaused(false);
     setShowRecommendations(false);
     setShowPerformanceProfile(false);
+    setShowInitialProfile(false);
     setFeedback('');
-    setStats({ excellent: 0, average: 0, bad: 0 }); // Reset stats when starting new session
+    setStats({ excellent: 0, average: 0, bad: 0 });
   };
 
   const pauseSession = () => {
@@ -57,11 +70,27 @@ const Index = () => {
     setFeedback('Session ended - Great work!');
   };
 
-  if (!isActive && !showRecommendations && !showPerformanceProfile) {
+  if (!isActive && !showRecommendations && !showPerformanceProfile && !showInitialProfile) {
     return (
       <SportsSelection
         selectedSport={selectedSport}
         onSportSelect={setSelectedSport}
+        onStartTraining={() => setShowInitialProfile(true)}
+      />
+    );
+  }
+
+  if (showInitialProfile) {
+    return (
+      <PerformanceProfile
+        onViewRecommendations={() => {
+          setShowInitialProfile(false);
+          setShowRecommendations(true);
+        }}
+        onBackToSports={() => {
+          setShowInitialProfile(false);
+        }}
+        skillLevels={skillLevels}
         onStartTraining={startSession}
       />
     );
@@ -76,8 +105,9 @@ const Index = () => {
         }}
         onBackToSports={() => {
           setShowPerformanceProfile(false);
-          setShowRecommendations(false);
         }}
+        skillLevels={skillLevels}
+        onStartTraining={startSession}
       />
     );
   }
