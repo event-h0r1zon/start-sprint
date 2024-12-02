@@ -37,6 +37,7 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
       toast("Jab Speed improved by 4%!", {
         description: "Keep up the good work!",
         duration: 4000,
+        className: "bg-white text-gray-900 border border-gray-200",
       });
     }
   }, [isPostTraining]);
