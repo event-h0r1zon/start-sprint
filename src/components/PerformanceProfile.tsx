@@ -1,7 +1,6 @@
 import React from 'react';
 import { RadialBarChart, RadialBar, Legend, Tooltip } from 'recharts';
 import { ChartContainer } from "@/components/ui/chart";
-import { toast } from "sonner";
 
 interface PerformanceProfileProps {
   onViewRecommendations: () => void;
@@ -20,7 +19,21 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
   showRecommendationsButton = false,
   isPostTraining = false,
 }) => {
-  const performanceData = Object.entries(skillLevels).map(([name, value], index) => ({
+  const getIncreasedSkills = () => {
+    if (!isPostTraining) return skillLevels;
+    
+    return {
+      'Guard Position': Math.min(100, skillLevels['Guard Position'] + 3),
+      'Jab Speed': Math.min(100, skillLevels['Jab Speed'] + 4),
+      'Chin Protection': Math.min(100, skillLevels['Chin Protection'] + 2),
+      'Stance': Math.min(100, skillLevels['Stance'] + 3),
+      'Form': Math.min(100, skillLevels['Form'] + 2)
+    };
+  };
+
+  const currentSkills = getIncreasedSkills();
+  
+  const performanceData = Object.entries(currentSkills).map(([name, value], index) => ({
     name,
     value,
     fill: [
@@ -29,18 +42,9 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
       '#8dd1e1',
       '#82ca9d',
       '#a4de6c'
-    ][index % 5]
+    ][index % 5],
+    increase: isPostTraining ? value - skillLevels[name] : 0
   }));
-
-  React.useEffect(() => {
-    if (isPostTraining) {
-      toast("Jab Speed improved by 4%!", {
-        description: "Keep up the good work!",
-        duration: 4000,
-        className: "bg-white text-gray-900 border border-gray-200",
-      });
-    }
-  }, [isPostTraining]);
 
   return (
     <div className="container mx-auto px-4 py-12 animate-fade-in">
@@ -71,7 +75,14 @@ const PerformanceProfile: React.FC<PerformanceProfileProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
           {performanceData.map((item) => (
             <div key={item.name} className="bg-gray-700/50 p-4 rounded-lg">
-              <h3 className="text-white font-medium mb-2">{item.name}</h3>
+              <h3 className="text-white font-medium mb-2">
+                {item.name}
+                {item.increase > 0 && (
+                  <span className="text-green-400 ml-2">
+                    +{item.increase}%
+                  </span>
+                )}
+              </h3>
               <div className="flex items-center gap-2">
                 <div className="h-2 flex-1 bg-gray-600 rounded-full overflow-hidden">
                   <div 
