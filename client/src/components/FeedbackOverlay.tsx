@@ -19,18 +19,18 @@ const FeedbackOverlay: React.FC<FeedbackOverlayProps> = ({
   return (
     <AnimatePresence>
       {feedback && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg backdrop-blur-sm
-                     text-white font-medium shadow-lg"
-          style={{ maxWidth: '90vw' }}
-        >
-          <div className={`${colors[type]} px-4 py-2 rounded-lg`}>
-            {feedback}
-          </div>
-        </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        className="fixed bottom-8 right-8 px-6 py-3 rounded-lg backdrop-blur-sm
+             text-white font-medium shadow-lg"
+        style={{ maxWidth: '90vw' }}
+      >
+        <div className={`${colors[type]} px-4 py-2 rounded-lg`}>
+        {feedback}
+        </div>
+      </motion.div>
       )}
     </AnimatePresence>
   );
