@@ -175,10 +175,10 @@ const CameraView: React.FC<CameraViewProps> = ({
 
     const camera = new Camera(videoRef.current, {
       onFrame: async () => {
-        await pose.send({ image: videoRef.current });
+      await pose.send({ image: videoRef.current });
       },
-      width: 1280,
-      height: 720,
+      width: canvasRef.current.width,
+      height: canvasRef.current.height,
     });
     camera.start();
   }, [videoRef, canvasRef]);
