@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import { Pose, POSE_CONNECTIONS } from '@mediapipe/pose';
 import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
+import { get } from 'http';
+import { frame } from 'framer-motion';
 
 interface CameraViewProps {
   onStream: (stream: MediaStream) => void;
@@ -18,27 +20,17 @@ const CameraView: React.FC<CameraViewProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    
     if (!videoRef.current || !canvasRef.current) return;
-
-    // Set initial dimensions
-    const setDimensions = () => {
-      if (!videoRef.current || !canvasRef.current) return;
-      
-      const parentDiv = videoRef.current.parentElement;
-      if (!parentDiv) return;
-
-      // Set fixed dimensions that match common webcam resolutions
-      const width = 640;  // Standard webcam width
-      const height = 480; // Standard webcam height
-
-      videoRef.current.width = width;
-      videoRef.current.height = height;
-      canvasRef.current.width = width;
-      canvasRef.current.height = height;
-    };
-
-    setDimensions();
     videoRef.current.style.display = 'none';
+    const parentDiv = videoRef.current.parentElement;
+    
+    if (parentDiv) {
+      videoRef.current.width = parentDiv.clientWidth;
+      videoRef.current.height = parentDiv.clientHeight;
+      canvasRef.current.width = parentDiv.clientWidth;
+      canvasRef.current.height = parentDiv.clientHeight;
+    }
 
     let distance_history_side = [];
     let distance_history_ear_hip = [];
@@ -111,15 +103,11 @@ const CameraView: React.FC<CameraViewProps> = ({
     }
 
     function onResults(results) {
-      if (!videoRef.current || !canvasRef.current) return;
-      
       const canvasCtx = canvasRef.current.getContext('2d');
-      if (!canvasCtx) return;
-
-      canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       canvasCtx.drawImage(results.image, 0, 0, canvasRef.current.width, canvasRef.current.height);
-      
+      const frame_shape = [canvasRef.current.width, canvasRef.current.height];
+
       if (results.poseLandmarks) {
         const landmarks = results.poseLandmarks;
 
@@ -169,8 +157,6 @@ const CameraView: React.FC<CameraViewProps> = ({
         }
         
       }
-
-      canvasCtx.restore();
     }
 
     const pose = new Pose({
@@ -187,34 +173,15 @@ const CameraView: React.FC<CameraViewProps> = ({
 
     pose.onResults(onResults);
 
-    // Initialize camera with specific dimensions
     const camera = new Camera(videoRef.current, {
       onFrame: async () => {
-        if (!videoRef.current || videoRef.current.videoWidth === 0) return;
         await pose.send({ image: videoRef.current });
       },
-      width: 640,
-      height: 480,
+      width: 1280,
+      height: 720,
     });
-
-    // Start camera only if component is active
-    if (isActive) {
-      camera.start()
-        .then(() => {
-          if (videoRef.current && videoRef.current.srcObject) {
-            onStream(videoRef.current.srcObject as MediaStream);
-          }
-        })
-        .catch(error => {
-          console.error('Error starting camera:', error);
-        });
-    }
-
-    // Cleanup function
-    return () => {
-      camera.stop();
-    };
-  }, [onStream, onPoseAnalysis, isActive]);
+    camera.start();
+  }, [videoRef, canvasRef]);
 
   return (
     <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden flex items-center justify-center">
