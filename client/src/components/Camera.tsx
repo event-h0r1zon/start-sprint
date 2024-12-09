@@ -182,9 +182,12 @@ const CameraView: React.FC<CameraViewProps> = ({
   }, [videoRef, canvasRef]);
 
   return (
-    <div className="relative w-full mx-auto aspect-video rounded-2xl overflow-hidden flex items-center justify-center sm:w-1/2">
+    <div className="relative w-full mx-auto aspect-video overflow-hidden flex items-center justify-center">
       <video ref={videoRef} className="absolute object-cover" />
       <canvas ref={canvasRef} className="absolute h-full object-cover" />
+      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-center p-4 md:hidden">
+        <p>Please rotate your device to landscape mode to use the camera.</p>
+      </div>
     </div>
   );
 };
