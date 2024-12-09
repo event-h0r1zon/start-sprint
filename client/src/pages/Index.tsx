@@ -126,6 +126,11 @@ const Index = () => {
         onPoseAnalysis={handlePoseAnalysis}
         isActive={isActive && !isPaused}
       />
+      <StatsCounter 
+        excellent={stats.excellent}
+        average={stats.average}
+        bad={stats.bad}
+      />*/
       {feedback && <FeedbackOverlay feedback={feedback} />}
       <SessionControls
         isActive={isActive}
