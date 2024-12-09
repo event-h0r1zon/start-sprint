@@ -182,7 +182,7 @@ const CameraView: React.FC<CameraViewProps> = ({
   }, [videoRef, canvasRef]);
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden flex items-center justify-center" style={{ width: "100%", height: '55vh' }}>
+    <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden flex items-center justify-center" style={{ width: "100%", height: '60%' }}>
       <video ref={videoRef} className="absolute object-cover" />
       <canvas ref={canvasRef} className="absolute h-full object-cover" />
       <div className="absolute top-4 right-4 bg-black/20 backdrop-blur-sm p-2 rounded-lg">
