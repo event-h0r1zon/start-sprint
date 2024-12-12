@@ -195,7 +195,7 @@ const CameraView: React.FC<CameraViewProps> = ({
 
   function get_camera_dimensions (){
     if (window.innerWidth <= 768) { // Mobile resolution
-      return { width: 800, height: 600 };
+      return { width: 400, height: 300 };
     } else { // Desktop resolution
       return { width: 1280, height: 720 };
     }
