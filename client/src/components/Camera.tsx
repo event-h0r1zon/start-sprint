@@ -174,14 +174,6 @@ const CameraView: React.FC<CameraViewProps> = ({
 
     pose.onResults(onResults);
 
-    function get_camera_dimensions (){
-      if (window.innerWidth <= 768) { // Mobile resolution
-        return { width: 800, height: 600 };
-      } else { // Desktop resolution
-        return { width: 1280, height: 720 };
-      }
-    }
-
     const camera = new Camera(videoRef.current, {
       width: get_camera_dimensions().width,
       height: get_camera_dimensions().height,
@@ -195,16 +187,16 @@ const CameraView: React.FC<CameraViewProps> = ({
 
   function get_camera_dimensions (){
     if (window.innerWidth <= 768) { // Mobile resolution
-      return { width: 300, height: 400 };
+      return { width: window.innerWidth, height: window.innerWidth*4/3 };
     } else { // Desktop resolution
-      return { width: 1280, height: 720 };
+      return { width: window.innerWidth/1.3, height: window.innerWidth*9/(16*1.3) };
     }
   }
 
   return (
     <div className="overflow-hidden flex items-center justify-center w-full h-full">
-      <video ref={videoRef} className="absolute" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
-      <canvas ref={canvasRef} className="absolute" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
+      <video ref={videoRef} className="absolute rounded-lg" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
+      <canvas ref={canvasRef} className="absolute rounded-lg" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
       <div className="backdrop-blur-sm rounded-lg">
       </div>
     </div>
