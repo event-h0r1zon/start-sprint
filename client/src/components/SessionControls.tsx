@@ -17,7 +17,7 @@ const SessionControls: React.FC<SessionControlsProps> = ({
   onStop,
 }) => {
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 
+    <div className="fixed bottom-8 left-0 flex items-center gap-4 
                     bg-black/20 backdrop-blur-sm p-4 rounded-full">
       {!isActive ? (
         <button

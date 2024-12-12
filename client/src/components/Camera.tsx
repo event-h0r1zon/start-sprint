@@ -12,6 +12,17 @@ interface CameraViewProps {
   isActive?: boolean;
 }
 
+function get_camera_dimensions (){
+  if (window.innerWidth <= 768) { // Mobile resolution
+    return { width: window.innerWidth, height: window.innerWidth*4/3 };
+  } else { // Desktop resolution
+    return { width: window.innerWidth/1.3, height: window.innerWidth*9/(16*1.3) };
+  }
+}
+
+const width = get_camera_dimensions().width;
+const height = get_camera_dimensions().height;
+
 const CameraView: React.FC<CameraViewProps> = ({
   onStream,
   onPoseAnalysis,
@@ -24,14 +35,11 @@ const CameraView: React.FC<CameraViewProps> = ({
     
     if (!videoRef.current || !canvasRef.current) return;
     videoRef.current.style.display = 'none';
-    const parentDiv = videoRef.current.parentElement;
     
-    if (parentDiv) {
-      videoRef.current.width = parentDiv.clientWidth;
-      videoRef.current.height = parentDiv.clientHeight;
-      canvasRef.current.width = parentDiv.clientWidth;
-      canvasRef.current.height = parentDiv.clientHeight;
-    }
+    videoRef.current.width = width;
+    videoRef.current.height = height;
+    canvasRef.current.width = width;
+    canvasRef.current.height = height;
 
     let distance_history_side = [];
     let distance_history_ear_hip = [];
@@ -171,21 +179,12 @@ const CameraView: React.FC<CameraViewProps> = ({
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
     });
-    
-    function get_camera_dimensions (){
-      if (window.innerWidth <= 768) { // Mobile resolution
-        return { width: window.innerWidth, height: window.innerWidth*4/3 };
-      } else { // Desktop resolution
-        return { width: window.innerWidth/1.3, height: window.innerWidth*9/(16*1.3) };
-      }
-    }
 
     pose.onResults(onResults);
 
     const camera = new Camera(videoRef.current, {
-      width: get_camera_dimensions().width,
-      height: get_camera_dimensions().height,
-
+      width: width,
+      height: height,
       onFrame: async () => {
         await pose.send({ image: videoRef.current });
       }
@@ -193,19 +192,13 @@ const CameraView: React.FC<CameraViewProps> = ({
     camera.start();
   }, [videoRef, canvasRef]);
 
-  function get_camera_dimensions (){
-    if (window.innerWidth <= 768) { // Mobile resolution
-      return { width: window.innerWidth, height: window.innerWidth*4/3 };
-    } else { // Desktop resolution
-      return { width: window.innerWidth/1.3, height: window.innerWidth*9/(16*1.3) };
-    }
-  }
+
 
   return (
     <div className="overflow-hidden flex items-center justify-center w-full h-full">
       <video ref={videoRef} className="absolute rounded-lg" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
       <canvas ref={canvasRef} className="absolute rounded-lg" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
-      <div className="backdrop-blur-sm rounded-lg">
+      <div className="backdrop-blur-sm flex justify-left rounded-lg">
       </div>
     </div>
   );

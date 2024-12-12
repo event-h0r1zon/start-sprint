@@ -120,25 +120,20 @@ const Index = () => {
   }
 
   return (
-    <div className="relative h-screen">
+    <div style={{ position: 'relative', height: '100vh', display: 'flex' }}>
       <CameraView 
         onStream={handleStream} 
         onPoseAnalysis={handlePoseAnalysis}
         isActive={isActive && !isPaused}
       />
-      <StatsCounter 
-        excellent={stats.excellent}
-        average={stats.average}
-        bad={stats.bad}
-      />*/
       {feedback && <FeedbackOverlay feedback={feedback} />}
-      <SessionControls
-        isActive={isActive}
-        isPaused={isPaused}
-        onStart={startSession}
-        onPause={pauseSession}
-        onStop={stopSession}
-      />
+        <SessionControls
+          isActive={isActive}
+          isPaused={isPaused}
+          onStart={startSession}
+          onPause={pauseSession}
+          onStop={stopSession}
+        />
     </div>
   );
 };
