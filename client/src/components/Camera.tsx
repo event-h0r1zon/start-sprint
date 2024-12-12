@@ -193,10 +193,18 @@ const CameraView: React.FC<CameraViewProps> = ({
     camera.start();
   }, [videoRef, canvasRef]);
 
+  function get_camera_dimensions (){
+    if (window.innerWidth <= 768) { // Mobile resolution
+      return { width: 800, height: 600 };
+    } else { // Desktop resolution
+      return { width: 1280, height: 720 };
+    }
+  }
+
   return (
-    <div className="overflow-hidden flex items-center justify-center h-full">
-      <video ref={videoRef} className="absolute" />
-      <canvas ref={canvasRef} className="absolute"/>
+    <div className="overflow-hidden flex items-center justify-center w-full h-full">
+      <video ref={videoRef} className="absolute" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
+      <canvas ref={canvasRef} className="absolute" style={{width: get_camera_dimensions().width, height: get_camera_dimensions().height}}/>
       <div className="backdrop-blur-sm rounded-lg">
       </div>
     </div>
