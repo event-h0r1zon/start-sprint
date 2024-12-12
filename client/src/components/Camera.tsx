@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { Pose, POSE_CONNECTIONS } from '@mediapipe/pose';
 import { Camera } from '@mediapipe/camera_utils';
-import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
-import { get } from 'http';
-import { frame } from 'framer-motion';
+// import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
+// import { get } from 'http';
+// import { frame } from 'framer-motion';
 
 interface CameraViewProps {
   onStream: (stream: MediaStream) => void;
@@ -182,10 +182,10 @@ const CameraView: React.FC<CameraViewProps> = ({
   }, [videoRef, canvasRef]);
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden flex items-center justify-center" style={{ width: "100%", height: '60%' }}>
-      <video ref={videoRef} className="absolute object-cover" />
-      <canvas ref={canvasRef} className="absolute h-full object-cover" />
-      <div className="absolute top-4 right-4 bg-black/20 backdrop-blur-sm p-2 rounded-lg">
+    <div className="overflow-hidden flex items-center justify-center aspect-video">
+      <video ref={videoRef} className="absolute aspect-video" />
+      <canvas ref={canvasRef} className="absolute aspect-video"/>
+      <div className="backdrop-blur-sm rounded-lg">
       </div>
     </div>
   );
