@@ -14,7 +14,7 @@ interface CameraViewProps {
 
 function get_camera_dimensions (){
   if (window.innerWidth <= 768) { // Mobile resolution
-    return { width: window.innerWidth, height: window.innerWidth*4/3 };
+    return { width: window.innerWidth, height: window.innerWidth };
   } else { // Desktop resolution
     return { width: window.innerWidth/1.3, height: window.innerWidth*9/(16*1.3) };
   }
