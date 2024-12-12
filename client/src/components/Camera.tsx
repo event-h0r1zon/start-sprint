@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Pose, POSE_CONNECTIONS } from '@mediapipe/pose';
 import { Camera } from '@mediapipe/camera_utils';
+import { get } from 'http';
 // import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 // import { get } from 'http';
 // import { frame } from 'framer-motion';
@@ -173,7 +174,18 @@ const CameraView: React.FC<CameraViewProps> = ({
 
     pose.onResults(onResults);
 
+    function get_camera_dimensions (){
+      if (window.innerWidth <= 768) { // Mobile resolution
+        return { width: 800, height: 600 };
+      } else { // Desktop resolution
+        return { width: 1280, height: 720 };
+      }
+    }
+
     const camera = new Camera(videoRef.current, {
+      width: get_camera_dimensions().width,
+      height: get_camera_dimensions().height,
+
       onFrame: async () => {
         await pose.send({ image: videoRef.current });
       }
@@ -182,9 +194,9 @@ const CameraView: React.FC<CameraViewProps> = ({
   }, [videoRef, canvasRef]);
 
   return (
-    <div className="overflow-hidden flex items-center justify-center aspect-video">
-      <video ref={videoRef} className="absolute aspect-video" />
-      <canvas ref={canvasRef} className="absolute aspect-video"/>
+    <div className="overflow-hidden flex items-center justify-center h-full">
+      <video ref={videoRef} className="absolute" />
+      <canvas ref={canvasRef} className="absolute"/>
       <div className="backdrop-blur-sm rounded-lg">
       </div>
     </div>
